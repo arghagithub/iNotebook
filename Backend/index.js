@@ -5,6 +5,8 @@ connectToMongo();
 const app = express()
 const port = 80;
 
+app.use(express.json());//if we want to use request body
+
 //Available routes
 
 app.use('/api/auth',require('./routes/auth'));

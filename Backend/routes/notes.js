@@ -61,34 +61,62 @@ router.put(
     const { title, description, tag } = req.body;
 
     //cerate a new note object
-    const newnote = {};
-    if (title) {
-      newnote.title = title;
-    }
-    if (description) {
-      newnote.description = description;
-    }
-    if (tag) {
-      newnote.tag = tag;
-    }
+    try {
+      const newnote = {};
+      if (title) {
+        newnote.title = title;
+      }
+      if (description) {
+        newnote.description = description;
+      }
+      if (tag) {
+        newnote.tag = tag;
+      }
 
-    //find the note to be updated and update it
+      //find the note to be updated and update it
 
+      let note = await Notes.findById(req.params.id);
+      if (!note) {
+        return res.status(404).json({ error: "wrong user credentials" });
+      }
+
+      if (note.user.toString() !== req.user.id) {
+        return res.status(404).send("Unauthorized access");
+      }
+
+      note = await Notes.findByIdAndUpdate(
+        req.params.id,
+        { $set: newnote },
+        { new: true }
+      );
+      res.json(note);
+    } catch (error) {
+      res.status(500).json({ error: "sorry, internal server error" });
+    }
+  }
+);
+
+//  Route4: delete notes of the user : DELETE /api/notes/deltenote :Login required
+
+router.delete("/deletenote/:id", fetchuser, async (req, res) => {
+
+  //find the note to be deleted and delete it
+  try {
     let note = await Notes.findById(req.params.id);
     if (!note) {
       return res.status(404).json({ error: "wrong user credentials" });
     }
 
+    //allow deleteion if and only if user's own data it is
     if (note.user.toString() !== req.user.id) {
-      return res.status(404).send("Unauthorized access");
+      return res.status(401).send("Unauthorized access");
     }
 
-    note = await Notes.findByIdAndUpdate(
-      req.params.id,
-      { $set: newnote },
-      { new: true }
-    );
-    res.json(note);
+    note = await Notes.findByIdAndDelete(req.params.id);
+    res.json({ ok: "note is deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "sorry, internal server error" });
   }
-);
+});
+
 module.exports = router;

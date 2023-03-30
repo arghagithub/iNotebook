@@ -9,13 +9,12 @@ const { body, validationResult } = require("express-validator");
 //  Route1: Get all notes using : GET /api/notes/fetchallnotes  :Login requied
 
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
-    try {
-        const notes = await Notes.find({ user: req.user.id });
-        res.json(notes);
-        
-    } catch (error) {
-        res.status(400).json({"error":error.message});
-    }
+  try {
+    const notes = await Notes.find({ user: req.user.id });
+    res.json(notes);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
 // Route2: add all notes of the user : POST /api/notes/addnote :Login required
@@ -47,9 +46,49 @@ router.post(
 
       res.json(savenote);
     } catch (error) {
-        res.status(400).json({"error":error.message});
+      res.status(400).json({ error: error.message });
     }
   }
 );
 
+//  Route3: update all notes of the user : POST /api/notes/updatenote :Login required
+
+router.put(
+  "/updatenote/:id",
+  fetchuser,
+
+  async (req, res) => {
+    const { title, description, tag } = req.body;
+
+    //cerate a new note object
+    const newnote = {};
+    if (title) {
+      newnote.title = title;
+    }
+    if (description) {
+      newnote.description = description;
+    }
+    if (tag) {
+      newnote.tag = tag;
+    }
+
+    //find the note to be updated and update it
+
+    let note = await Notes.findById(req.params.id);
+    if (!note) {
+      return res.status(404).json({ error: "wrong user credentials" });
+    }
+
+    if (note.user.toString() !== req.user.id) {
+      return res.status(404).send("Unauthorized access");
+    }
+
+    note = await Notes.findByIdAndUpdate(
+      req.params.id,
+      { $set: newnote },
+      { new: true }
+    );
+    res.json(note);
+  }
+);
 module.exports = router;

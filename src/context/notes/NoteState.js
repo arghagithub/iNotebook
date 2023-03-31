@@ -1,20 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import NoteContext from "./noteContext";
 const NoteState = (props) => {
-  const [state, setState] = useState({
-    name: "Argha Golui",
-    class: "10B",
-  });
-  const updateState = () => {
-    setTimeout(() => {
-      setState({
-        name: "Malay Golui",
-        class: "11C",
-      });
-    }, 2000);
-  };
   return (
-    <NoteContext.Provider value={{state, updateState}}> {/*modern js syntax {state:state,updateState:updateState} */}
+    <NoteContext.Provider value={{}}>
         {props.children}
     </NoteContext.Provider>
   );

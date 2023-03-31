@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import "./App.css";
 import NoteState from "./context/notes/NoteState";
 import About from "./components/About";

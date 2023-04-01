@@ -1,29 +1,39 @@
-import React, { useContext, useEffect, useRef,useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import Addnote from "./Addnote";
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getnote } = context;
+  const { notes, getnote, editnote } = context;
   useEffect(() => {
     getnote();
-  }, []);
+  });
   const ref = useRef(null);
-  
-  const [note,setnote]=useState({
-    etitle:"",edescription:"",etag:""
-  })
+  const closeref = useRef(null);
+
+  const [note, setnote] = useState({
+    id: "",
+    etitle: "",
+    edescription: "",
+    etag: "",
+  });
   const updatenote = (currentnote) => {
     ref.current.click();
-    setnote({etitle:currentnote.title,edescription:currentnote.description,etag:currentnote.tag});
+    setnote({
+      id: currentnote._id,
+      etitle: currentnote.title,
+      edescription: currentnote.description,
+      etag: currentnote.tag,
+    });
   };
   const onchange = (e) => {
     setnote({ ...note, [e.target.name]: e.target.value });
   };
-  const handleclick=(e)=>{
-    e.preventDefault();
-    console.log("updating the note",note);
-  }
+  const handleclick = (e) => {
+    closeref.current.click();
+    console.log("updating the note", note);
+    editnote(note.id, note.etitle, note.edescription, note.etag);
+  };
 
   return (
     <>
@@ -34,7 +44,7 @@ const Notes = () => {
         className="btn btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
-        style={{display:'none'}}
+        style={{ display: "none" }}
       >
         Launch demo modal
       </button>
@@ -106,10 +116,15 @@ const Notes = () => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                ref={closeref}
               >
                 Close
               </button>
-              <button type="button" onClick={handleclick} className="btn btn-primary">
+              <button
+                type="button"
+                onClick={handleclick}
+                className="btn btn-primary"
+              >
                 Update Note
               </button>
             </div>

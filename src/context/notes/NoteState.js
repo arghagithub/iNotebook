@@ -27,6 +27,7 @@ const NoteState = (props) => {
   const addnote = async (title, description, tag) => {
     //Todo api call
     const url = `${host}api/notes/addnote`;
+    // eslint-disable-next-line
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -48,6 +49,7 @@ const NoteState = (props) => {
   const deletenote = async (id) => {
     //todo api call
     const url = `${host}api/notes/deletenote/${id}`;
+    // eslint-disable-next-line
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -65,6 +67,7 @@ const NoteState = (props) => {
   const editnote = async (id, title, description, tag) => {
     //todo api call
     const url = `${host}api/notes/updatenote/${id}`;
+    // eslint-disable-next-line
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -74,15 +77,18 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    // const json = await response.json();s
-    for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+    // const json = await response.json();
+    let newNotes=JSON.parse(JSON.stringify(notes));
+    for (let index = 0; index < newNotes.length; index++) {
+      const element=newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[index].title = title;
+        newNotes[index].description = description;
+        newNotes[index].tag = tag;
+        break;
       }
     }
+    setNotes(newNotes);
   };
   return (
     <NoteContext.Provider

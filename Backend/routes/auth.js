@@ -21,9 +21,10 @@ router.post(
   ],
   async (req, res) => {
     //if there are error return bad request and the error
+    let success=false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success:success, errors: errors.array() });
     }
 
     //check whether the user already exists or not
@@ -32,7 +33,7 @@ router.post(
       if (user) {
         return res
           .status(400)
-          .json({ error: "sorry, this user already exists" });
+          .json({success:success, error: "sorry, this user already exists" });
       }
 
       const salt = await bcrypt.genSaltSync(10);
@@ -50,9 +51,9 @@ router.post(
         },
       };
       const token = jwt.sign(data, JWT_SECRET);
-      res.json({ token: token });
+      res.json({success:true, token: token });
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json({success:success, message: error.message });
     }
 
     // .then((user) => res.json(user)).catch((err)=>{

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom' ;
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const host = "http://localhost/";
   const url = `${host}api/auth/login`;
   const [credentials, setCredentials] = useState({
@@ -25,7 +25,7 @@ const Login = () => {
     console.log(json);
     if (json.success) {
       localStorage.setItem("token", json.token);
-      navigate('/');
+      navigate("/");
     } else {
       alert("invalid login credentials");
     }

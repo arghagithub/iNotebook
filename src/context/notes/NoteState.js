@@ -44,6 +44,7 @@ const NoteState = (props) => {
       tag: tag,
     };
     setNotes(notes.concat(note));
+    
   };
   //delete a note
   const deletenote = async (id) => {

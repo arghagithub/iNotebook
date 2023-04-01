@@ -124,6 +124,11 @@ const Notes = () => {
                 type="button"
                 onClick={handleclick}
                 className="btn btn-primary"
+                disabled={
+                  note.etitle.length < 5 ||
+                  note.edescription < 5 ||
+                  note.etag < 5
+                }
               >
                 Update Note
               </button>

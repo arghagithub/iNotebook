@@ -1,7 +1,13 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-const Navbar = () => {
+import { Link, useLocation, useNavigate } from "react-router-dom";
+const Navbar = (props) => {
   let location = useLocation();
+  const navigate=useNavigate();
+  const logout=()=>{
+    localStorage.removeItem('token');
+    props.showalert("successfully logged out","success");
+    navigate('/login');
+  }
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
       <div className="container-fluid">
@@ -44,18 +50,15 @@ const Navbar = () => {
             </li>
           </ul>
           <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <Link className="btn btn-primary" to="/login" role="button">
+            <Link className="btn btn-primary" to="/login" role="button" style={{display: (localStorage.getItem('token')?'none':'')}}>
               Login
             </Link>
-            <Link className="btn btn-danger mx-3" to="/signup" role="button">
+            <Link className="btn btn-success mx-3" to="/signup" role="button" style={{display: (localStorage.getItem('token')?'none':'')}}>
               Signup
             </Link>
+            <button className="btn btn-danger" type="button" onClick={logout} style={{display: (localStorage.getItem('token')?'':'none')}}>
+              Logout
+            </button>
           </form>
         </div>
       </div>

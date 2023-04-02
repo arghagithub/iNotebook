@@ -26,8 +26,8 @@ const Login = (props) => {
     console.log(json);
     if (json.success) {
       localStorage.setItem("token", json.token);
-      navigate("/");
       showalert("successfully logged in","success");
+      navigate("/");
     } else {
       showalert("invalid login credentials","danger");
     }
@@ -37,6 +37,7 @@ const Login = (props) => {
   };
   return (
     <div className="container">
+      <h2>Login to continue in iNotebook</h2>
       <form onSubmit={handlesubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">

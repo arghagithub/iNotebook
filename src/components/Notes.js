@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import Addnote from "./Addnote";
-const Notes = () => {
+const Notes = (props) => {
   const context = useContext(noteContext);
+  const {showalert}=props;
   const { notes, getnote, editnote } = context;
   useEffect(() => {
     getnote();
@@ -33,11 +34,12 @@ const Notes = () => {
     closeref.current.click();
     console.log("updating the note", note);
     editnote(note.id, note.etitle, note.edescription, note.etag);
+    showalert("Updated successfully","success");
   };
 
   return (
     <>
-      <Addnote />
+      <Addnote showalert={showalert} />
       <button
         ref={ref}
         type="button"
@@ -145,6 +147,7 @@ const Notes = () => {
               id={note._id}
               updatenote={updatenote}
               note={note}
+              showalert={showalert}
             />
           );
         })}
